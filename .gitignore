@@ -1,0 +1,5 @@
+work/
+rnaseq/
+materials/
+dag*
+.nextflow*
