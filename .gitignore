@@ -3,3 +3,4 @@ rnaseq/
 materials/
 dag*
 .nextflow*
+results/

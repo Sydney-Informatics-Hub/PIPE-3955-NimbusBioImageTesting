@@ -88,7 +88,7 @@ nextflow run rnaseq/main.nf \
     -with-timeline timeline_exercise1.html \
     -with-dag dag_exercise1.png 
 ```
-
+All ran well in expected time:
 ```
 -[nf-core/rnaseq] Pipeline completed successfully-
 WARN: Graphviz is required to render the execution DAG in the given format -- See http://www.graphviz.org for more info.
@@ -100,87 +100,147 @@ Succeeded   : 202
 
 ### Cross-check biocontainers with nf-core/rnaseq config 
 
-Downloaded Nandan's CVMFS config and make local copy to find requisite container names: 
-```
-wget -O working_directory.tar.gz https://cloudstor.aarnet.edu.au/plus/s/xveu7WCIdj7bk6c/download
-tar -zxvf working_directory.tar.gz
-cp working_directory/nextflow.config ./RNASEQ.config 
-```
+Software version are output by pipeline after a successful run, checked them (`results/pipeline_info/software_versions.yml`):
+```yaml
+BEDTOOLS_GENOMECOV:
+  bedtools: 2.30.0
+CUSTOM_DUMPSOFTWAREVERSIONS:
+  python: 3.10.6
+  yaml: '6.0'
+CUSTOM_GETCHROMSIZES:
+  getchromsizes: 1.16.1
+DESEQ2_QC_STAR_SALMON:
+  bioconductor-deseq2: 1.28.0
+  r-base: 4.0.3
+DUPRADAR:
+  bioconductor-dupradar: 1.28.0
+  r-base: 4.2.1
+FASTQC:
+  fastqc: 0.11.9
+GTF2BED:
+  perl: 5.26.2
+GTF_GENE_FILTER:
+  python: 3.9.5
+MAKE_TRANSCRIPTS_FASTA:
+  rsem: 1.3.1
+  star: 2.7.10a
+MULTIQC_CUSTOM_BIOTYPE:
+  python: 3.9.5
+PICARD_MARKDUPLICATES:
+  picard: 2.27.4-SNAPSHOT
+QUALIMAP_RNASEQ:
+  qualimap: 2.2.2-dev
+RSEQC_BAMSTAT:
+  rseqc: 3.0.1
+RSEQC_INFEREXPERIMENT:
+  rseqc: 3.0.1
+RSEQC_INNERDISTANCE:
+  rseqc: 3.0.1
+RSEQC_JUNCTIONANNOTATION:
+  rseqc: 3.0.1
+RSEQC_JUNCTIONSATURATION:
+  rseqc: 3.0.1
+RSEQC_READDISTRIBUTION:
+  rseqc: 3.0.1
+RSEQC_READDUPLICATION:
+  rseqc: 3.0.1
+SALMON_INDEX:
+  salmon: 1.9.0
+SALMON_QUANT:
+  salmon: 1.9.0
+SALMON_SE_GENE:
+  bioconductor-summarizedexperiment: 1.24.0
+  r-base: 4.1.1
+SALMON_TX2GENE:
+  python: 3.9.5
+SALMON_TXIMPORT:
+  bioconductor-tximeta: 1.12.0
+  r-base: 4.1.1
+SAMPLESHEET_CHECK:
+  python: 3.9.5
+SAMTOOLS_FLAGSTAT:
+  samtools: 1.16.1
+SAMTOOLS_IDXSTATS:
+  samtools: 1.16.1
+SAMTOOLS_INDEX:
+  samtools: 1.16.1
+SAMTOOLS_SORT:
+  samtools: 1.16.1
+SAMTOOLS_STATS:
+  samtools: 1.16.1
+STAR_ALIGN:
+  gawk: 5.1.0
+  samtools: 1.16.1
+  star: 2.7.9a
+STRINGTIE_STRINGTIE:
+  stringtie: 2.2.1
+SUBREAD_FEATURECOUNTS:
+  subread: 2.0.1
+TRIMGALORE:
+  cutadapt: '3.4'
+  trimgalore: 0.6.7
+UCSC_BEDCLIP:
+  ucsc: '377'
+UCSC_BEDGRAPHTOBIGWIG:
+  ucsc: '377'
+Workflow:
+  Nextflow: 22.10.7
+  nf-core/rnaseq: 3.10.1
+``` 
 
-Extracted container names from `RNASEQ.config`:
+Cross-check tools and versions with those available through sHPC biocontainers:
 ```python
-with open('RNASEQ.config', 'r') as file:
-    for line in file:
-        if 'container =' in line:
-            container_path = line.split('/')[-1].strip(" '}\n")
-            print(container_path)
-```
-
-Found 32 containers for 18 tools, multiple versions of MultiQC and Samtools: 
-```
-preseq-3.1.2--h06ef8b0_1.img'
-python-3.8.3.img
-python-3.8.3.img
-python-3.8.3.img
-python-3.8.3.img
-python-3.8.3.img
-stringtie-2.1.7--h978d192_0.img
-subread-2.0.1--hed695b0_0.img
-rseqc-3.0.1--py37h516909a_1.img
-bioconductor-tximeta-1.8.0--r40_0.img
-mulled-v2-cf0123ef83b3c38c13e3b0696a3f285d3f20f15b-606b713ec440e799d53a2b51a6e79dbfd28ecf3e-0.img
-mulled-v2-8849acf39a43cdd6c839a369a74c0adc823e2f91-ab110436faf952a33575c64dd74615a84011450b-0.img
-bbmap-38.93--he522d1c_0.img
-bedtools-2.30.0--hc088bd4_0.img
-multiqc-1.10.1--py_0.img
-multiqc-1.11--pyhdfd78af_0.img
-salmon-1.5.2--h84f40af_0.img
-star-2.6.1d--0.img
-fastqc-0.11.9--0.img
-trim-galore-0.6.7--hdfd78af_0.img
-qualimap-2.2.2d--1.img
-picard-2.25.7--hdfd78af_0.img
-ucsc-bedclip-377--h0b8a92a_2.img
-ucsc-bedgraphtobigwig-377--h446ed27_1.img
-samtools-1.13--h8c37831_0.img
-samtools-1.10--h9402c20_2.img
-samtools-1.13--h8c37831_0.img
-samtools-1.13--h8c37831_0.img
-samtools-1.13--h8c37831_0.img
-samtools-1.13--h8c37831_0.img
-bioconductor-dupradar-1.18.0--r40_1.img
-bioconductor-summarizedexperiment-1.20.0--r40_0.img
-```
-
-Cross-check tools with those available through sHPC biocontainers:
-```python
+import re
 import subprocess
 
-with open('RNASEQ.config', 'r') as file:
-    tool_names = set()
-    for line in file:
-        if 'container =' in line:
-            container_path = line.split("'")[1]
-            tool_name = container_path.split('/')[-1].split('-')[0]
-            tool_names.add(tool_name)
-            #print(f'tool_name: {tool_name}')  # added line
-    for tool_name in tool_names:
-        command = ['shpc', 'show', '-f', 'quay.io/biocontainers/{}'.format(tool_name)]
-        output = subprocess.check_output(command, text=True)
-        expected_output = f'quay.io/biocontainers/{tool_name}'
-        if output.strip() == expected_output:
-            print(output.rstrip())
+with open("results/pipeline_info/software_versions.yml", "r") as f:
+    lines = f.readlines()
+    for line in lines:
+        match = re.match(r"^(\b\w+\b):\s*\d+\.\d+\.\d+$", line.strip())
+        if match:
+            toolname = match.group(1)
+            if not toolname.startswith(('python-', 'perl-')):
+                command = f"shpc show --versions -f quay.io/biocontainers/{toolname}"
+                output = subprocess.check_output(command, shell=True, text=True).strip()
+                versions = set()
+                for tool in output.split('\n'):
+                    if not tool.startswith(('quay.io/biocontainers/python-', 'quay.io/biocontainers/python_','quay.io/biocontainers/perl-')):
+                        versions.add(tool.strip())
+                if versions:
+                    print(f"{toolname}: {', '.join(versions)}")
 ```
-
-Extract correct versions, check with example (subread): 
 ```
-module avail subread
-
----------------------------------------------------------------------- /home/ubuntu/singularity-hpc/modules ----------------------------------------------------------------------
-   quay.io/biocontainers/bioconductor-rsubread/2.8.2--r41hc0cfd56_0/module    quay.io/biocontainers/subread/2.0.3--h7132678_1/module
+bedtools: quay.io/biocontainers/bedtools:2.30.0--h468198e_3
+python: quay.io/biocontainers/python:3.9, quay.io/biocontainers/python:3.10, quay.io/biocontainers/python:3, quay.io/biocontainers/python:3.9--1
+getchromsizes: 
+fastqc: quay.io/biocontainers/fastqc:0.11.9--hdfd78af_1, quay.io/biocontainers/fastqc-rs:0.3.2--he9f29cb_1, quay.io/biocontainers/fastqc:0.11.9--0
+perl: quay.io/biocontainers/perl:5.26.2, quay.io/biocontainers/perl:5.26
+python: quay.io/biocontainers/python:3.9, quay.io/biocontainers/python:3.10, quay.io/biocontainers/python:3, quay.io/biocontainers/python:3.9--1
+rsem: quay.io/biocontainers/rsem:1.3.3--pl5321h6b7c446_6, quay.io/biocontainers/rsem:1.3.3--pl5321ha04fe3b_5
+python: quay.io/biocontainers/python:3.9, quay.io/biocontainers/python:3.10, quay.io/biocontainers/python:3, quay.io/biocontainers/python:3.9--1
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+rseqc: quay.io/biocontainers/rseqc:5.0.1--py310h1425a21_0, quay.io/biocontainers/rseqc:4.0.0--py36h91eb985_2
+salmon: quay.io/biocontainers/salmon:1.7.0--h10bb6b4_1, quay.io/biocontainers/salmon:1.8.0--h7e5ed60_1, quay.io/biocontainers/salmon:1.6.0--h84f40af_0, quay.io/biocontainers/salmon:1.5.2--h84f40af_0, quay.io/biocontainers/salmon:1.4.0--h84f40af_1, quay.io/biocontainers/salmon:1.9.0--h7e5ed60_1
+salmon: quay.io/biocontainers/salmon:1.7.0--h10bb6b4_1, quay.io/biocontainers/salmon:1.8.0--h7e5ed60_1, quay.io/biocontainers/salmon:1.6.0--h84f40af_0, quay.io/biocontainers/salmon:1.5.2--h84f40af_0, quay.io/biocontainers/salmon:1.4.0--h84f40af_1, quay.io/biocontainers/salmon:1.9.0--h7e5ed60_1
+python: quay.io/biocontainers/python:3.9, quay.io/biocontainers/python:3.10, quay.io/biocontainers/python:3, quay.io/biocontainers/python:3.9--1
+python: quay.io/biocontainers/python:3.9, quay.io/biocontainers/python:3.10, quay.io/biocontainers/python:3, quay.io/biocontainers/python:3.9--1
+samtools: quay.io/biocontainers/samtools:1.14--hb421002_0, quay.io/biocontainers/samtools:1.15--h3843a85_0, quay.io/biocontainers/samtools:1.12--h9aed4be_1, quay.io/biocontainers/samtools:1.10--h2e538c0_3, quay.io/biocontainers/samtools:1.13--h8c37831_0, quay.io/biocontainers/samtools:1.11--h6270b1f_0
+samtools: quay.io/biocontainers/samtools:1.14--hb421002_0, quay.io/biocontainers/samtools:1.15--h3843a85_0, quay.io/biocontainers/samtools:1.12--h9aed4be_1, quay.io/biocontainers/samtools:1.10--h2e538c0_3, quay.io/biocontainers/samtools:1.13--h8c37831_0, quay.io/biocontainers/samtools:1.11--h6270b1f_0
+samtools: quay.io/biocontainers/samtools:1.14--hb421002_0, quay.io/biocontainers/samtools:1.15--h3843a85_0, quay.io/biocontainers/samtools:1.12--h9aed4be_1, quay.io/biocontainers/samtools:1.10--h2e538c0_3, quay.io/biocontainers/samtools:1.13--h8c37831_0, quay.io/biocontainers/samtools:1.11--h6270b1f_0
+samtools: quay.io/biocontainers/samtools:1.14--hb421002_0, quay.io/biocontainers/samtools:1.15--h3843a85_0, quay.io/biocontainers/samtools:1.12--h9aed4be_1, quay.io/biocontainers/samtools:1.10--h2e538c0_3, quay.io/biocontainers/samtools:1.13--h8c37831_0, quay.io/biocontainers/samtools:1.11--h6270b1f_0
+samtools: quay.io/biocontainers/samtools:1.14--hb421002_0, quay.io/biocontainers/samtools:1.15--h3843a85_0, quay.io/biocontainers/samtools:1.12--h9aed4be_1, quay.io/biocontainers/samtools:1.10--h2e538c0_3, quay.io/biocontainers/samtools:1.13--h8c37831_0, quay.io/biocontainers/samtools:1.11--h6270b1f_0
+gawk: quay.io/biocontainers/gawk:5.1.0
+samtools: quay.io/biocontainers/samtools:1.14--hb421002_0, quay.io/biocontainers/samtools:1.15--h3843a85_0, quay.io/biocontainers/samtools:1.12--h9aed4be_1, quay.io/biocontainers/samtools:1.10--h2e538c0_3, quay.io/biocontainers/samtools:1.13--h8c37831_0, quay.io/biocontainers/samtools:1.11--h6270b1f_0
+stringtie: quay.io/biocontainers/stringtie:2.2.1--hecb563c_2
+subread: quay.io/biocontainers/subread:2.0.1--h7132678_2, quay.io/biocontainers/subread:2.0.3--h7132678_0, quay.io/biocontainers/subread:2.0.3--h7132678_1
+trimgalore: 
+Nextflow: 
 ```
-
-Does not have required version (2.0.1)
 
 ## (Unsolicited) feedback on user guide 
 * If possible would be useful to know what versions of pre-installed software is available  
