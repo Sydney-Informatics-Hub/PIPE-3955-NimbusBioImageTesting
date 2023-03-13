@@ -4,3 +4,4 @@ materials/
 dag*
 .nextflow*
 results/
+RNASEQ.config

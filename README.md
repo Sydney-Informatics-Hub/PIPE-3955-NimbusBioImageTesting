@@ -266,43 +266,46 @@ Tested use of different version of STAR in `sHPC.config`:
 
 // Replace STAR container with sHPC module
 process {
-    withName: 'BEDTOOLS_GENOMECOV'  { module = 'quay.io/biocontainers/bedtools/2.30.0--h468198e_3/module' }
-    withName: 'FASTQC'              { module = 'quay.io/biocontainers/fastqc/0.12.1--hdfd78af_0/module' }
-    withName: 'QUALIMAP_RNASEQ'     { module = 'quay.io/biocontainers/qualimap/2.2.2d--hdfd78af_2/module' }
-    withName: 'STAR_ALIGN'          { module = 'quay.io/biocontainers/star/2.7.9a--h9ee0642_0/module' }
-    withName: 'RSEQC_BAMSTAT | RSEQC_INFEREXPERIMENT | RSEQC_INNERDISTANCE | RSEQC_JUNCTIONANNOTATION | RSEQC_JUNCTIONSATURATION | RSEQC_READDISTRIBUTION | RSEQC_READDUPLICATION' { module = 'quay.io/biocontainers/rseqc/5.0.1--py39hbf8eff0_0/module' } 
-    withName: 'SALMON_INDEX | SALMON_QUANT' { module = 'quay.io/biocontainers/salmon/1.9.0--h7e5ed60_1/module' }   
-    withName: 'STRINGTIE_STRINGTIE' { module = 'quay.io/biocontainers/stringtie/2.2.1--ha04fe3b_3/module' }
+    withName: 'BEDTOOLS_GENOMECOV'  { module = 'quay.io/biocontainers/bedtools/2.30.0--h468198e_3/module'   }
+    withName: 'FASTQC'              { module = 'quay.io/biocontainers/fastqc/0.12.1--hdfd78af_0/module'     }
+    withName: 'QUALIMAP_RNASEQ'     { module = 'quay.io/biocontainers/qualimap/2.2.2d--hdfd78af_2/module'   }
+    withName: 'STAR_ALIGN'          { module = 'quay.io/biocontainers/star/2.7.9a--h9ee0642_0/module'       }
+    withName: 'RSEQC_BAMSTAT'       { module = 'quay.io/biocontainers/rseqc/5.0.1--py39hbf8eff0_0/module'   } 
+    withName: 'FASTQC'              { module = 'quay.io/biocontainers/salmon/1.9.0--h7e5ed60_1/module'      }   
+    withName: 'STRINGTIE_STRINGTIE' { module = 'quay.io/biocontainers/stringtie/2.2.1--ha04fe3b_3/module'   }
 }
 ```
 
 Re-ran workflow: 
-```
+```bash
 materials=/home/ubuntu/PIPE-3955-NimbusBioImageTesting/materials/mm10_reference/
 
 nextflow run rnaseq/main.nf \
     --input ./materials/samplesheet.csv \
-    --outdir /home/ubuntu/nfcoreWorkshopTesting/sHPC/results \
+    --outdir /home/ubuntu/nfcoreWorkshopTesting/sHPC2/results \
     --max_memory '6.GB' --max_cpus 2 \
     --gtf $materials/mm10_chr18.gtf \
     --fasta $materials/mm10_chr18.fa \
     --star_index $materials/STAR \
     -profile singularity \
-    -config sHPC.config \ 
+    -config sHPC.config \
     -with-report execution_report_sHPC2.html \
     -with-trace execution_trace_sHPC2.txt \
     -with-timeline timeline_sHPC2.html \
-    -with-dag dag_sHPC2.png 
+    -with-dag dag_sHPC2.png -resume
 ```
 
-Replacing container with sHPC module for process works and workflow runs to completion. 
+Replacing container with sHPC module for process works and workflow runs to completion: 
 ```
--[nf-core/rnaseq] Pipeline completed successfully-
-Completed at: 13-Mar-2023 04:37:11
-Duration    : 17m 2s
-CPU hours   : 0.5
-Succeeded   : 202
+Completed at: 13-Mar-2023 05:18:57
+Duration    : 16m 59s
+CPU hours   : 0.5 (0.4% cached)
+Succeeded   : 197
+Cached      : 5
 ```
+
+Could not confirm default containers were being overwritten by `sHPC.config` as  `software_versions.yml` printed default versions for all tools. Will explore this with CH separately.  
+
 
 ## Questions and (unsolicited) feedback 
 * Would be useful to know what versions of pre-installed software is available in BioImage documentation/user guide
